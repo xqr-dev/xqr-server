@@ -1,3 +1,4 @@
+use axum::response::Html;
 use axum::{extract::State, response::IntoResponse, routing::get, Json, Router};
 use jwtk::{
     jwk::{JwkSet, WithKid},
@@ -38,6 +39,7 @@ async fn main() -> jwtk::Result<()> {
     let state = Arc::new(AppState { jwks });
 
     let app = Router::new()
+        .route("/", get(home))
         .route("/.well-known/jwks.json", get(jwks_handler))
         .with_state(state);
 
@@ -51,4 +53,22 @@ async fn main() -> jwtk::Result<()> {
 
 async fn jwks_handler(State(state): State<Arc<AppState>>) -> impl IntoResponse {
     Json(&state.jwks).into_response()
+}
+
+async fn home() -> impl IntoResponse {
+    Html(
+        r#"
+    <html>
+        <head>
+            <title>XQR Code Server Demo</title>
+            <style>body{text-align:center}</style>
+        </head>
+        <body>
+            <p>This is a demo server for eXtended QR (XQR) Codes.</p>
+            <p>See <a href="https://github.com/xqr-dev/xqr-server">GitHub</a> for more information.</p>
+        </body>
+    </html>
+    "#
+        .to_string(),
+    )
 }
