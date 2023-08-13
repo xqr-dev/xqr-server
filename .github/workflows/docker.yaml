@@ -46,7 +46,7 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            registry.digitalocean.com/xqr-server
+            registry.digitalocean.com/${{ env.IMAGE_NAME }}
           # defaults + sha
           tags: |
             type=schedule
