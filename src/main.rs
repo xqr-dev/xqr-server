@@ -11,18 +11,26 @@ struct AppState {
 
 #[tokio::main]
 async fn main() -> jwtk::Result<()> {
-    let key_path = match std::env::var("XQR_KEY_PATH") {
-        Ok(path) => path,
-        _ => "key.pub".to_string(),
+    let key = match std::env::var("XQR_KEY") {
+        Ok(pub_key) => {
+            println!("using key from env");
+            pub_key.as_bytes().to_vec()
+        }
+        _ => {
+            let key_path = match std::env::var("XQR_KEY_PATH") {
+                Ok(path) => path,
+                _ => "key.pub".to_string(),
+            };
+            println!("using key path {:?}", key_path);
+            std::fs::read(key_path)?
+        }
     };
-    println!("using key path {:?}", key_path);
-    let k = std::fs::read(key_path)?;
 
-    let k = SomePublicKey::from_pem(&k)?;
-    let k = WithKid::new_with_thumbprint_id(k)?;
-    println!("using key {:?}", k);
+    let key = SomePublicKey::from_pem(&key)?;
+    let key = WithKid::new_with_thumbprint_id(key)?;
+    println!("using key {:?}", key);
 
-    let k_public_jwk = k.public_key_to_jwk()?;
+    let k_public_jwk = key.public_key_to_jwk()?;
     let jwks = JwkSet {
         keys: vec![k_public_jwk],
     };
