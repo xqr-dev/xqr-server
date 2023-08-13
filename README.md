@@ -5,7 +5,8 @@ A simple http server that exposes a /.well-known/jwks.json endpoint for use with
 ## Features
 
 - [x] Expose /.well-known/jwks.json endpoint for loaded keys
-- [ ] Docker image
+- [x] Docker image
 - [ ] Helm chart
 - [ ] Support for multiple keys
-- [ ] Cloudflare worker (store pubkey pem in env var or KV store?)
+- [ ] ~~Cloudflare worker (store pubkey pem in env var or KV store?)~~
+  - Cloudflare worker rust support is not ready
