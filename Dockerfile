@@ -14,7 +14,7 @@ ARG APP_NAME
 WORKDIR /app
 
 # We don't need to clear the apt cache here since it's not used in the final image
-RUN apt-get update && apt-get install -y openssl
+RUN apt-get update && apt-get install -y openssl pkg-config
 
 # Build the application.
 # Leverage a cache mount to /usr/local/cargo/registry/
@@ -41,7 +41,7 @@ EOF
 # stage.
 FROM debian:bookworm-slim AS final
 
-RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y openssl pkg-config && rm -rf /var/lib/apt/lists/*
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
